@@ -34,6 +34,9 @@ display_name = "bqml_referenceguide_corpus"
 paths = [
     "gs://cloud-samples-data/adk-samples/data-science/bqml"
 ]  # Supports Google Cloud Storage and Google Drive Links
+# Browse content on: https://console.cloud.google.com/storage/browser/cloud-samples-data/adk-samples/data-science/bqml/
+
+
 
 
 # Initialize Vertex AI API once per session

@@ -1,0 +1,7 @@
+{
+    "eval_set_path": "eval/eval_data/02_bqml_agent_skills.evalset.json",
+    "agent_name": "bq_ml_agent",
+    "criteria": {
+      "tool_trajectory_avg_score": 1.0
+    }
+  }

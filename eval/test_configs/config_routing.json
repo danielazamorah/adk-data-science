@@ -1,0 +1,6 @@
+{
+    "eval_set_path": "eval/eval_data/01_orchestrator_routing.evalset.json",
+    "criteria": {
+      "tool_trajectory_avg_score": 1.0
+    }
+  }

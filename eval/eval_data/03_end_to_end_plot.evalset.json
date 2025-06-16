@@ -1,0 +1,51 @@
+{
+    "eval_set_id": "end_to_end_plotting_suite",
+    "name": "End-to-End Data Fetch and Plot Test",
+    "description": "Tests a full conversation flow: fetching training data, fetching forecast data, and then plotting them together.",
+    "eval_cases": [
+      {
+        "eval_id": "test_fetch_and_plot_combined",
+        "conversation": [
+          {
+            "invocation_id": "e-2fd09b5f-f6c4-460e-b334-a77863b3b2d5",
+            "user_content": {
+              "parts": [{ "text": "Can you plot some data from the training, too? I mean, I want to not only see the forecast, but also the training data. Plot only for \"Kaggle\" product and \"Discount Stickers\" store." }]
+            },
+            "final_response": {
+              "parts": [{ "text": "I have successfully generated and presented the time series plot." }]
+            },
+            "intermediate_data": {
+              "tool_uses": [
+                {
+                  "id": "adk-733c816d-17aa-49da-ae57-31984a56713a",
+                  "name": "call_db_agent",
+                  "args": {
+                    "question": "Retrieve 'date', 'num_sold' for product 'Kaggle' and store 'Discount Stickers' from the `arai-sandbox-327738.forecasting_sticker_sales.train` table."
+                  }
+                },
+                {
+                  "id": "adk-2f21986d-02c9-4662-bc5c-8d17244204ce",
+                  "name": "call_db_agent",
+                  "args": {
+                    "question": "Retrieve 'forecast_timestamp' as 'date', 'forecast_value' as 'num_sold', 'prediction_interval_lower_bound', 'prediction_interval_upper_bound' for product 'Kaggle' and store 'Discount Stickers' from the `arai-sandbox-327738.forecasting_sticker_sales.forecasted_sales` table."
+                  }
+                },
+                {
+                  "id": "adk-11b83749-2f05-4e2a-ae6f-324db9993e22",
+                  "name": "call_ds_agent",
+                  "args": {
+                    "question": "Generate a time series plot combining training and forecasted data for 'Kaggle' product and 'Discount Stickers' store. The training data has 'date' and 'num_sold' columns. The forecasted data has 'date' (forecast_timestamp), 'num_sold' (forecast_value), 'prediction_interval_lower_bound', and 'prediction_interval_upper_bound' columns. Plot the training data as blue points and the forecasted data as a red line with a shaded red confidence interval. The x-axis should be 'date' and the y-axis should be 'num_sold'. Label the plot appropriately."
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "session_input": {
+          "app_name": "data_science",
+          "user_id": "eval_user",
+          "state": {}
+        }
+      }
+    ]
+  }

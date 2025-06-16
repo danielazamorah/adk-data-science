@@ -1,0 +1,7 @@
+{
+    "eval_set_path": "eval/eval_data/03_end_to_end_plot.evalset.json",
+    "criteria": {
+      "tool_trajectory_avg_score": 1.0,
+      "response_match_score": 0.7
+    }
+  }

@@ -1,0 +1,37 @@
+{
+  "eval_set_id": "orchestrator_routing_suite",
+  "name": "Orchestrator Routing Test",
+  "description": "Tests if the root agent correctly transfers control to the bq_ml_agent for BQML-specific tasks.",
+  "eval_cases": [
+    {
+      "eval_id": "test_bqml_handoff",
+      "conversation": [
+        {
+          "invocation_id": "e-b8cae46c-a366-4bf4-9977-80a1e1b0aad6",
+          "user_content": {
+            "parts": [{ "text": "What kinds of forecasting models can I train in BQML?" }]
+          },
+          "final_response": {
+            "parts": [{ "text": "In BQML, you can train forecasting models using the `ARIMA_PLUS` and `ARIMA_PLUS_XREG` models." }]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": "adk-2497dad5-fa64-4cde-8916-19b1ab5a5123",
+                "name": "transfer_to_agent",
+                "args": {
+                  "agent_name": "bq_ml_agent"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "data_science",
+        "user_id": "eval_user",
+        "state": {}
+      }
+    }
+  ]
+}

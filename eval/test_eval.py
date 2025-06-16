@@ -1,36 +1,57 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
+import subprocess
 import os
+from dotenv import load_dotenv
 
-import pytest
-from dotenv import find_dotenv, load_dotenv
-from google.adk.evaluation.agent_evaluator import AgentEvaluator
+# --- Configuration ---
+# Correct path to the agent module DIRECTORY
+AGENT_MODULE_PATH = "data_science" 
+EVAL_CONFIGS = {
+    "Orchestrator Routing": "eval/test_configs/config_routing.json",
+    "BQML Agent Skills": "eval/test_configs/config_bqml.json",
+    "End-to-End Plotting": "eval/test_configs/config_e2e_plot.json",
+}
 
-pytest_plugins = ("pytest_asyncio",)
+def run_evaluation(suite_name: str, config_path: str):
+    """Runs a single ADK evaluation suite using the correct CLI syntax."""
+    print("="*80)
+    print(f"🔬 Running Evaluation Suite: {suite_name}")
+    print("="*80)
+
+    # This is the corrected command structure based on the ADK documentation.
+    # 'AGENT_MODULE_PATH' is now a positional argument.
+    # '--config_file_path' is the correct flag for the config file.
+    command = [
+        "adk", "eval",
+        AGENT_MODULE_PATH,
+        f"--config_file_path={config_path}"
+    ]
+
+    try:
+        # The environment variables loaded by load_dotenv() are automatically
+        # inherited by the subprocess.
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
+        print("✅ Suite completed successfully!")
+        print(result.stdout)
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Suite failed for {suite_name}!")
+        print(f"Return Code: {e.returncode}")
+        print("\n--- STDOUT ---")
+        print(e.stdout)
+        print("\n--- STDERR ---")
+        print(e.stderr)
+    except FileNotFoundError:
+        print("❌ Error: 'adk' command not found. Make sure you are in the correct poetry environment.")
+    print("\n\n")
 
 
-@pytest.fixture(scope="session", autouse=True)
-def load_env():
-    load_dotenv(find_dotenv(".env"))
-
-
-@pytest.mark.asyncio
-async def test_eval_simple():
-    """Test the agent's basic ability via a session file."""
-    await AgentEvaluator.evaluate(
-        "data_science",
-        os.path.join(os.path.dirname(__file__), "eval_data/simple.test.json"),
-        num_runs=1,
-    )
+if __name__ == "__main__":
+    # Load variables from the .env file at the project root
+    load_dotenv() 
+    
+    if not os.environ.get("WANDB_API_KEY") or not os.environ.get("WANDB_PROJECT_ID"):
+        print("🛑 Error: WANDB_API_KEY and WANDB_PROJECT_ID environment variables must be set in your .env file.")
+    else:
+        print("🚀 Starting Data Science Agent Evaluation Pipeline...")
+        for name, config in EVAL_CONFIGS.items():
+            run_evaluation(name, config)
+        print("🎉 Evaluation Pipeline Finished.")

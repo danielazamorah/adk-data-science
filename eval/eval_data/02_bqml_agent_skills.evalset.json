@@ -1,0 +1,39 @@
+{
+  "eval_set_id": "bqml_agent_skills_suite",
+  "name": "BQML Agent Skills Test",
+  "description": "Tests if the bq_ml_agent can generate a correct ARIMA_PLUS model creation query.",
+  "eval_cases": [
+    {
+      "eval_id": "test_create_arima_plus_model",
+      "conversation": [
+        {
+          "invocation_id": "e-9216824e-0370-4252-a980-249b0b0741db",
+          "user_content": {
+            "parts": [{ "text": "I would like to train sales per product and store with time series column being date" }]
+          },
+          "final_response": {
+            "parts": [{ "text": "The `ARIMA_PLUS` forecasting model has been successfully trained." }]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": "adk-58439a7a-9a30-42d7-8770-779572a6a136",
+                "name": "execute_bqml_code",
+                "args": {
+                  "project_id": "arai-sandbox-327738",
+                  "dataset_id": "forecasting_sticker_sales",
+                  "bqml_code": "\nCREATE OR REPLACE MODEL `arai-sandbox-327738.forecasting_sticker_sales.sales_forecast_model`\nOPTIONS(\n  MODEL_TYPE='ARIMA_PLUS',\n  TIME_SERIES_TIMESTAMP_COL='date',\n  TIME_SERIES_DATA_COL='num_sold',\n  TIME_SERIES_ID_COL=['product', 'store']\n) AS\nSELECT\n  date,\n  product,\n  store,\n  num_sold\nFROM\n  `arai-sandbox-327738.forecasting_sticker_sales.train`\nWHERE\n  num_sold IS NOT NULL\n"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "data_science",
+        "user_id": "eval_user",
+        "state": {}
+      }
+    }
+  ]
+}
